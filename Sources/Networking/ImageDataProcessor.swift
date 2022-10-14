@@ -25,6 +25,7 @@
 //  THE SOFTWARE.
 
 import Foundation
+import CryptoSwift
 
 private let sharedProcessingQueue: CallbackQueue =
     .dispatch(DispatchQueue(label: "com.onevcat.Kingfisher.ImageDownloader.Process"))
@@ -70,5 +71,70 @@ class ImageDataProcessor {
             }
             onImageProcessed.call((result, callback))
         }
+    }
+}
+
+
+class EncryptedImageDataProcessor {
+    let encryptedData: Data
+    let callbacks: [SessionDataTask.TaskCallback]
+    let queue: CallbackQueue
+
+    let encryptionKey: Array<UInt8>
+    let iv: Array<UInt8>
+    
+    
+    // Note: We have an optimization choice there, to reduce queue dispatch by checking callback
+    // queue settings in each option...
+    let onImageProcessed = Delegate<(Result<KFCrossPlatformImage, KingfisherError>, SessionDataTask.TaskCallback), Void>()
+
+    init(data: Data, encryptionKey: String, iv: String, callbacks: [SessionDataTask.TaskCallback], processingQueue: CallbackQueue?) {
+        self.encryptedData = data
+        
+        
+        let encryptionKeyRaw = Array<UInt8>(base64: encryptionKey)
+        let ivRaw = Array<UInt8>(base64: iv)
+        
+        self.encryptionKey = encryptionKeyRaw
+        self.iv = ivRaw
+        self.callbacks = callbacks
+        self.queue = processingQueue ?? sharedProcessingQueue
+    }
+
+    func process() {
+        queue.execute(doProcess)
+    }
+
+    private func doProcess() {
+        var processedImages = [String: KFCrossPlatformImage]()
+        do {
+            let gcm = GCM(iv: iv, mode: .combined)
+            let aes = try AES(key: encryptionKey, blockMode: gcm, padding: .noPadding)
+            let decrypted = try aes.decrypt(Array(encryptedData))
+            print(decrypted)
+            let data = Data(decrypted)
+            for callback in callbacks {
+                let processor = callback.options.processor
+                var image = processedImages[processor.identifier]
+                if image == nil {
+                    image = processor.process(item: .data(data), options: callback.options)
+                    processedImages[processor.identifier] = image
+                }
+
+                let result: Result<KFCrossPlatformImage, KingfisherError>
+                if let image = image {
+                    let finalImage = callback.options.backgroundDecode ? image.kf.decoded : image
+                    result = .success(finalImage)
+                } else {
+                    let error = KingfisherError.processorError(
+                        reason: .processingFailed(processor: processor, item: .data(data)))
+                    result = .failure(error)
+                }
+                onImageProcessed.call((result, callback))
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        
     }
 }

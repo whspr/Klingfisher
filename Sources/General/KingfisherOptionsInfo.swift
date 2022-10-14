@@ -262,6 +262,9 @@ public enum KingfisherOptionsInfoItem {
     /// If not set or the `source` is `nil`, the device Low Data Mode will be ignored and the original source will
     /// be loaded following the system default behavior, in a normal way.
     case lowDataMode(Source?)
+    
+    case encryptionKey(String)
+    case iv(String)
 }
 
 // Improve performance by parsing the input `KingfisherOptionsInfo` (self) first.
@@ -307,6 +310,9 @@ public struct KingfisherParsedOptionsInfo {
     public var alternativeSources: [Source]? = nil
     public var retryStrategy: RetryStrategy? = nil
     public var lowDataModeSource: Source? = nil
+    
+    public var encryptionKey: String? = nil
+    public var iv: String? = nil
 
     var onDataReceived: [DataReceivingSideEffect]? = nil
     
@@ -350,6 +356,8 @@ public struct KingfisherParsedOptionsInfo {
             case .alternativeSources(let sources): alternativeSources = sources
             case .retryStrategy(let strategy): retryStrategy = strategy
             case .lowDataMode(let source): lowDataModeSource = source
+            case .encryptionKey(let value): encryptionKey = value
+            case .iv(let value): iv = value
             }
         }
 

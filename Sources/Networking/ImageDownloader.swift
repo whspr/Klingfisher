@@ -108,6 +108,8 @@ open class ImageDownloader {
     /// The duration before the downloading is timeout. Default is 15 seconds.
     open var downloadTimeout: TimeInterval = 15.0
     
+    open var shouldUseEncryptedImageProcessor: Bool = false
+    
     /// A set of trusted hosts when receiving server trust challenges. A challenge with host name contained in this
     /// set will be ignored. You can use this set to specify the self-signed site. It only will be used if you don't
     /// specify the `authenticationChallengeResponder`.
@@ -332,13 +334,37 @@ open class ImageDownloader {
             switch result {
             // Download finished. Now process the data to an image.
             case .success(let (data, response)):
-                let processor = ImageDataProcessor(
-                    data: data, callbacks: callbacks, processingQueue: context.options.processingQueue
+                guard let key = context.options.encryptionKey,
+                      let iv = context.options.iv else {
+                    let processor = ImageDataProcessor(
+                        data: data,
+                        callbacks: callbacks,
+                        processingQueue: context.options.processingQueue
+                    )
+                    processor.onImageProcessed.delegate(on: self) { (self, done) in
+                        // `onImageProcessed` will be called for `callbacks.count` times, with each
+                        // `SessionDataTask.TaskCallback` as the input parameter.
+                        // result: Result<Image>, callback: SessionDataTask.TaskCallback
+                        let (result, callback) = done
+
+                        self.reportDidProcessImage(result: result, url: context.url, response: response)
+
+                        let imageResult = result.map { ImageLoadingResult(image: $0, url: context.url, originalData: data) }
+                        let queue = callback.options.callbackQueue
+                        queue.execute { callback.onCompleted?.call(imageResult) }
+                    }
+                    processor.process()
+                    return
+                }
+                
+                let processor = EncryptedImageDataProcessor(
+                    data: data,
+                    encryptionKey: key,
+                    iv: iv,
+                    callbacks: callbacks,
+                    processingQueue: context.options.processingQueue
                 )
                 processor.onImageProcessed.delegate(on: self) { (self, done) in
-                    // `onImageProcessed` will be called for `callbacks.count` times, with each
-                    // `SessionDataTask.TaskCallback` as the input parameter.
-                    // result: Result<Image>, callback: SessionDataTask.TaskCallback
                     let (result, callback) = done
 
                     self.reportDidProcessImage(result: result, url: context.url, response: response)
@@ -348,7 +374,6 @@ open class ImageDownloader {
                     queue.execute { callback.onCompleted?.call(imageResult) }
                 }
                 processor.process()
-
             case .failure(let error):
                 callbacks.forEach { callback in
                     let queue = callback.options.callbackQueue
