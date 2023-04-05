@@ -2,6 +2,48 @@
 
 -----
 
+## [7.6.2 - Fix Dead Loop](https://github.com/onevcat/Kingfisher/releases/tag/7.6.2) (2023-02-23)
+
+#### Fix
+* An issue causes high CPU usage and infinite loop when setting `nil` URL to a `KFImage` when `startLoadingBeforeViewAppear` is also `true`. [#2035](https://github.com/onevcat/Kingfisher/issues/2035) Big thanks to @BobbyRohweder
+* The extension support for `CPListItem` won't set the image back to blank when the loading failing. Now it keeps showing the placeholder, if set. [#2031](https://github.com/onevcat/Kingfisher/pull/2031) @DevVenusK
+
+---
+
+## [7.6.1 - Strict for Compiling](https://github.com/onevcat/Kingfisher/releases/tag/7.6.1) (2023-02-13)
+
+#### Fix
+* A compiling issue that new version of Swift (Swift 5.8) refuses to accept the false-positive optional binding. [#2029](https://github.com/onevcat/Kingfisher/pull/2029) @JetForMe
+
+---
+
+## [7.6.0 - Content Configuration](https://github.com/onevcat/Kingfisher/releases/tag/7.6.0) (2023-02-05)
+
+#### Add
+* Add a `contentConfigure` modifier to `KFImage` and related view types under SwiftUI. This allows you returning a non-image view to finish the configuation and display it as the loading result of `KFImage`. [#2027](https://github.com/onevcat/Kingfisher/pull/2027)
+* Make the `cachePathBlock` public so you can also configure it when creating a custom `DiskStorage.Config`. [#2025](https://github.com/onevcat/Kingfisher/pull/2025) by @zarechnyy
+
+---
+
+## [7.5.0 - Aggressive New Year](https://github.com/onevcat/Kingfisher/releases/tag/7.5.0) (2023-01-08)
+
+#### Add
+* Add a `KFImage` modifier `startLoadingBeforeViewAppear` to allow image loading before SwiftUI view's `onAppear`. This is a workaround for [#1988](https://github.com/onevcat/Kingfisher/issues/1988).
+
+#### Fix
+* Now loading images from local disk also respects the `backgroundDecode` option. [#2009](https://github.com/onevcat/Kingfisher/pull/2009)
+
+---
+
+## [7.4.1 - Maple Days](https://github.com/onevcat/Kingfisher/releases/tag/7.4.1) (2022-10-26)
+
+#### Fix
+* A rare crash from `_UIImageCGImageContent` when loading GIF files on iOS 15 or later. [#2004](https://github.com/onevcat/Kingfisher/pull/2004)
+* Now the dSYM symbols are contained inside the xcframework bundle instead of as standalone files. [#1998](https://github.com/onevcat/Kingfisher/pull/1998)
+* An issue that the processor is not applied to original image data when `DefaultCacheSerializer.preferCacheOriginalData` is set to `true`. [#1999](https://github.com/onevcat/Kingfisher/pull/1999)
+
+---
+
 ## [7.4.0 - Summer Ends](https://github.com/onevcat/Kingfisher/releases/tag/7.4.0) (2022-10-05)
 
 #### Add
