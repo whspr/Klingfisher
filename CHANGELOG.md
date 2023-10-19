@@ -2,6 +2,56 @@
 
 -----
 
+## [7.9.1 - Lastest Xcode 15 beta](https://github.com/onevcat/Kingfisher/releases/tag/7.9.1) (2023-08-26)
+
+#### Fix
+* Update to the terminology for the latest Xcode 15 beta. It prevents building failing and warnings from previous beta versions. [#2123](https://github.com/onevcat/Kingfisher/pull/2123) @simonbs
+* A misused reason in the privacy manifest file. Now Kingfisher should declare the reason of using file creation and access time correctly. (However, the manifest file mechanism of SDK seems not working yet in Xcode 15 beta 7) [#2135](https://github.com/onevcat/Kingfisher/pull/2135) @CloudosaurusRex @onevcat
+* Some warnings which happens when building xcframework. This prevents them from becoming errors in the coming Swift 6. [#2136](https://github.com/onevcat/Kingfisher/pull/2136)
+
+---
+
+## [7.9.0 - visionOS & Xcode 15](https://github.com/onevcat/Kingfisher/releases/tag/7.9.0) (2023-07-29)
+
+#### Add
+* Add visionOS as support target. Now Kingfisher can run natively on visionOS, in both UIKit or SwiftUI mode. [#2103](https://github.com/onevcat/Kingfisher/pull/2103)
+* Add private manifest file (`PrivacyInfo.xcprivacy`) to the project to meet Apple's requirement of describing data collected and use of required reason API. [#2104](https://github.com/onevcat/Kingfisher/pull/2104)
+* Support digital signature in xcframework. Now the xcframework of Kingfisher is signed with the Apple Developer ID of the maintainer team. [#2106](https://github.com/onevcat/Kingfisher/pull/2106)
+* A public initializer of `ImageDownloadResult`. This allows overriding side to construct and return a valid download result. [#2107](https://github.com/onevcat/Kingfisher/pull/2107) @kmaschke85
+
+#### Fix
+* Some documentation fixes.
+
+---
+
+## [7.8.1 - Animated <3 Processor](https://github.com/onevcat/Kingfisher/releases/tag/7.8.1) (2023-06-19)
+
+#### Fix
+* Now the animated image creation from disk cache will use the input processor correctly. [#2099](https://github.com/onevcat/Kingfisher/pull/2099) @yeatse
+
+---
+
+## [7.8.0 - ImageSource Protocol](https://github.com/onevcat/Kingfisher/releases/tag/7.8.0) (2023-06-13)
+
+#### Add
+* Introduce a custom image source provider to enable third-party image processors to utilize `AnimatedImageView`. [#2094](https://github.com/onevcat/Kingfisher/pull/2094) @yeatse
+
+#### Fix
+* Deprecate the `ImageResource` and rename it to `KF.ImageResource`. This triggers a warning when explicitly refering to `ImageResource`, which conflicts to the identical names from Apple's `GeneratedAssetSymbols` or `DeveloperToolsSupport` in Xcode 15. It does not fix the issue automatically, but can help to achieve a smoother transition. [#2092](https://github.com/onevcat/Kingfisher/pull/2092) @JohnnyTseng @rtharston
+
+---
+
+## [7.7.0 - The Last Chance](https://github.com/onevcat/Kingfisher/releases/tag/7.7.0) (2023-05-20)
+
+#### Add
+* Expose a new `imageDownloader(_:didReceive:completionHandler:)` delegate method in `ImageDownloaderDelegate` to allow making `ResponseDisposition` decision to the download task. [#2048](https://github.com/onevcat/Kingfisher/pull/2048) @onevcat
+
+#### Fix
+* Some type conversion warnings which might annoy under Swift 6 compiler. [#2060](https://github.com/onevcat/Kingfisher/pull/2060) [#2063](https://github.com/onevcat/Kingfisher/pull/2063) @zunda-pixel
+* Apply access limitation to the internal `Source.Identifier`. [#2074](https://github.com/onevcat/Kingfisher/pull/2074) @iwill-hwang
+
+---
+
 ## [7.6.2 - Fix Dead Loop](https://github.com/onevcat/Kingfisher/releases/tag/7.6.2) (2023-02-23)
 
 #### Fix
