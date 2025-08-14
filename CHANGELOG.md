@@ -2,6 +2,59 @@
 
 -----
 
+## [7.12.0 - Lucky Seven](https://github.com/onevcat/Kingfisher/releases/tag/7.12.0) (2024-06-10)
+
+#### Add
+* Mark the `removeSizeExceededValues` method in `DiskStorage` as `public`. Now it is possible to call this method to trigger a cleanup of the disk cache manually. [#2214](https://github.com/onevcat/Kingfisher/pull/2214) @nickruddeni
+* A new `PHPickerResultImageDataProvider` for loading and caching images from `PHPickerResult`. [#2233](https://github.com/onevcat/Kingfisher/pull/2233) @nuomi1
+* An option of `reducePriorityOnDisappear` for SwiftUI. It sets a lower priority for the image download task when the view disappears, and restore it when re-appears. [#2211](https://github.com/onevcat/Kingfisher/pull/2211) @Aelx-Vaiman
+
+#### Fix
+* Some improvements for documentation grammar and typos. [#2236](https://github.com/onevcat/Kingfisher/pull/2236) @FlyingCaiChong
+* Use `.process` for the `PrivacyInfo.xcprivacy` in SPM to follow the practice suggested by Apple. [#2243](https://github.com/onevcat/Kingfisher/pull/2243) @BorysKhl @onevcat
+* An issue that the file extension was not correctly retrieved for calculating hash file name when `autoExtAfterHashedFileName` is set to `true`. [#2250](https://github.com/onevcat/Kingfisher/pull/2250) @freezy7
+
+---
+
+## [7.11.0 - visionOS for CocoaPods](https://github.com/onevcat/Kingfisher/releases/tag/7.11.0) (2024-02-12)
+
+#### Add
+* Add visionOS as a supported platform when being used in CocoaPods. For other dependency managers, it was already supported from previous versions. [#2205](https://github.com/onevcat/Kingfisher/pull/2205) @onevcat @grachyov
+* A name for background task started for image cache cleanup. [#2201](https://github.com/onevcat/Kingfisher/pull/2201) @antohisorin
+
+---
+
+## [7.10.2 - GIF crash fix](https://github.com/onevcat/Kingfisher/releases/tag/7.10.2) (2024-01-11)
+
+#### Fix
+* An issue that loading the same GIF image in differnet image views may crash the app. [#2194](https://github.com/onevcat/Kingfisher/pull/2194)
+* A build script issue that exported the xcframeworks does not have the correct cert signing. [#2179](https://github.com/onevcat/Kingfisher/pull/2179)
+* In iOS 13 and earlier, the new Swift runtime fails to convert `Any?` to a protocol value. [#2182](https://github.com/onevcat/Kingfisher/pull/2182)
+
+---
+
+## [7.10.1 - Compilation & Infinity](https://github.com/onevcat/Kingfisher/releases/tag/7.10.1) (2023-12-09)
+
+#### Fix
+* Now the CarPlay support (`CPListItem`) compiles again for iOS SDK 14.0 to 14.4. It was because an undocumented API change in the `CPListItem` property. [#2172](https://github.com/onevcat/Kingfisher/pull/2172) @brendonjkding
+* Fix an infinite `View` refreshing loop when `KFImage` is set with `startLoadingBeforeViewAppear` to `true` and the loading keeping fails. [#2169](https://github.com/onevcat/Kingfisher/pull/2169) @onevcat @sisoje @mirkokg
+
+---
+
+## [7.10.0 - Privacy Manifest](https://github.com/onevcat/Kingfisher/releases/tag/7.10.0) (2023-10-29)
+
+#### Add
+* Actually add the privacy manifest files to the xcframework, Swift Package Manager and CocoaPods. [#2122](https://github.com/onevcat/Kingfisher/issues/2122)[#2156](https://github.com/onevcat/Kingfisher/pull/2156) @CloudosaurusRex @NikcN22
+* Enable the modulemap generation and `-Swift.h` header again for ObjC compatibility. [#2138](https://github.com/onevcat/Kingfisher/pull/2138) @yev-kanivets
+
+#### Fix
+* Use the trait collection to determine animated image scale, instead of the deprecated `UIScreen` API. [#2157](https://github.com/onevcat/Kingfisher/pull/2157) @hyun99999
+* An issue that a local AV asset creates multiple disk caches when connected to Xcode during Debug phase. [#2158](https://github.com/onevcat/Kingfisher/pull/2157) @onevcat @elijahdou
+* The disk cache now is still availiable when the whole cache folder is removed by external operations instead of the methods in Kingfisher. [#2162](https://github.com/onevcat/Kingfisher/pull/2162) @onevcat @uclort
+* Some documentation and CI impro/vements.
+
+---
+
 ## [7.9.1 - Lastest Xcode 15 beta](https://github.com/onevcat/Kingfisher/releases/tag/7.9.1) (2023-08-26)
 
 #### Fix
